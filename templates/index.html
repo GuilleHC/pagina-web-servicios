@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crea tu página web</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f8f9fa;
+            color: #1a1a2e;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1a1a2e 0%, #0f3460 100%);
+            color: white;
+            text-align: center;
+            padding: 52px 20px;
+        }
+        .header h1 { font-size: 2rem; font-weight: 800; margin-bottom: 10px; }
+        .header p { font-size: 1.05rem; opacity: 0.75; }
+
+        .container {
+            max-width: 680px;
+            margin: 0 auto;
+            padding: 40px 20px 60px;
+        }
+
+        .form-section {
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+        }
+
+        .section-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #1a1a2e;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .section-number {
+            background: #0f3460;
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .field { margin-bottom: 20px; }
+        .field:last-child { margin-bottom: 0; }
+
+        label {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 6px;
+        }
+        label .hint {
+            font-weight: 400;
+            color: #9ca3af;
+            font-size: 0.8rem;
+        }
+
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1.5px solid #e5e7eb;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            font-family: inherit;
+            color: #1a1a2e;
+            transition: border-color 0.2s;
+            outline: none;
+            background: #fafafa;
+        }
+        input[type="text"]:focus,
+        textarea:focus {
+            border-color: #0f3460;
+            background: white;
+        }
+        textarea { resize: vertical; min-height: 80px; }
+
+        /* Palette cards */
+        .paletas-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        .palette-card {
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 14px;
+            cursor: pointer;
+            transition: border-color 0.2s, transform 0.15s, box-shadow 0.2s;
+            background: white;
+            display: block;
+        }
+        .palette-card:hover {
+            border-color: #9ca3af;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+        .palette-card.selected {
+            border-color: #0f3460;
+            box-shadow: 0 0 0 3px rgba(15, 52, 96, 0.12);
+        }
+        .palette-card input[type="radio"] { display: none; }
+
+        .palette-swatch {
+            height: 52px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+        .palette-colors {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 8px;
+        }
+        .color-dot {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            border: 1px solid rgba(0,0,0,0.1);
+        }
+        .palette-name {
+            font-size: 0.88rem;
+            font-weight: 700;
+            color: #1a1a2e;
+            margin-bottom: 2px;
+        }
+        .palette-desc { font-size: 0.76rem; color: #9ca3af; }
+
+        /* Submit */
+        .submit-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #1a1a2e 0%, #0f3460 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.05rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: opacity 0.2s, transform 0.1s;
+            font-family: inherit;
+        }
+        .submit-btn:hover { opacity: 0.88; transform: translateY(-1px); }
+        .submit-btn:active { transform: translateY(0); }
+
+        /* Loading state */
+        .submit-btn.loading { opacity: 0.6; cursor: not-allowed; }
+
+        @media (max-width: 480px) {
+            .paletas-grid { grid-template-columns: 1fr; }
+            .header h1 { font-size: 1.6rem; }
+            .form-section { padding: 24px; }
+        }
+    </style>
+</head>
+<body>
+
+<header class="header">
+    <h1>Crea tu página web</h1>
+    <p>Responde estas preguntas y generamos tu Hero en segundos</p>
+</header>
+
+<div class="container">
+    <form action="/generar" method="POST" id="form">
+
+        <!-- Sección 1: Información -->
+        <div class="form-section">
+            <div class="section-title">
+                <span class="section-number">1</span>
+                Cuéntanos sobre tu negocio
+            </div>
+
+            <div class="field">
+                <label>¿Cuál es tu profesión? <span class="hint">ej: Coach de vida, Nutricionista</span></label>
+                <input type="text" name="profesion" placeholder="Coach de vida" required>
+            </div>
+
+            <div class="field">
+                <label>¿Cómo se llama tu marca o negocio? <span class="hint">o tu nombre si trabajas de forma personal</span></label>
+                <input type="text" name="marca" placeholder="María González Coaching" required>
+            </div>
+
+            <div class="field">
+                <label>¿Qué problema resuelves o qué resultado das?</label>
+                <textarea name="valor" placeholder="Ayudo a mujeres a perder peso sin dietas restrictivas, logrando resultados duraderos en 3 meses" required></textarea>
+            </div>
+
+            <div class="field">
+                <label>¿Cómo te diferencias de los demás?</label>
+                <textarea name="diferenciacion" placeholder="Mi método combina nutrición personalizada con coaching emocional, sin prohibir alimentos" required></textarea>
+            </div>
+
+            <div class="field">
+                <label>Describe a tu cliente ideal</label>
+                <textarea name="cliente_ideal" placeholder="Mujeres de 30-50 años, con vida ocupada, que han probado dietas sin éxito y quieren un cambio real" required></textarea>
+            </div>
+
+            <div class="field">
+                <label>Tu número de WhatsApp <span class="hint">con código de país, ej: 56912345678</span></label>
+                <input type="text" name="whatsapp" placeholder="56912345678" required>
+            </div>
+        </div>
+
+        <!-- Sección 2: Estilo visual -->
+        <div class="form-section">
+            <div class="section-title">
+                <span class="section-number">2</span>
+                Elige el estilo de tu página
+            </div>
+
+            <div class="paletas-grid">
+                {% for key, paleta in paletas.items() %}
+                <label class="palette-card {% if loop.first %}selected{% endif %}">
+                    <input type="radio" name="paleta" value="{{ key }}" {% if loop.first %}checked{% endif %}>
+                    <div class="palette-swatch" style="background: {{ paleta.bg_gradient }};"></div>
+                    <div class="palette-colors">
+                        {% for color in paleta.preview %}
+                        <div class="color-dot" style="background: {{ color }};"></div>
+                        {% endfor %}
+                    </div>
+                    <div class="palette-name">{{ paleta.nombre }}</div>
+                    <div class="palette-desc">{{ paleta.descripcion }}</div>
+                </label>
+                {% endfor %}
+            </div>
+        </div>
+
+        <button type="submit" class="submit-btn" id="submit-btn">
+            Generar mi Hero con IA
+        </button>
+
+    </form>
+</div>
+
+<script>
+    // Palette card selection
+    document.querySelectorAll('input[name="paleta"]').forEach(radio => {
+        radio.addEventListener('change', function () {
+            document.querySelectorAll('.palette-card').forEach(c => c.classList.remove('selected'));
+            this.closest('.palette-card').classList.add('selected');
+        });
+    });
+
+    // Loading state on submit
+    document.getElementById('form').addEventListener('submit', function () {
+        const btn = document.getElementById('submit-btn');
+        btn.textContent = 'Generando con IA...';
+        btn.classList.add('loading');
+        btn.disabled = true;
+    });
+</script>
+
+</body>
+</html>
