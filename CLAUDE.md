@@ -47,9 +47,18 @@ Output files are written to `/mnt/user-data/outputs/` as `hero_<brand_name>.html
 Flujo de trabajo:
 ```bash
 git add <archivos>
-git commit -m "mensaje claro"
+git commit -m "tipo: resumen corto
+
+- Detalle del cambio 1
+- Detalle del cambio 2"
 git push
 ```
+
+**Reglas para mensajes de commit:**
+- Primera línea: `tipo: resumen en máximo 72 caracteres`
+- Tipos: `feat` (nueva función), `fix` (corrección), `docs` (documentación), `refactor`, `style`
+- Cuerpo opcional con bullets explicando el qué y el por qué del cambio
+- Siempre en español, claros y descriptivos para poder revertir cambios fácilmente
 
 **Seguridad:** Nunca incluir API keys en el código. Usar variables de entorno. El `.gitignore` excluye `__pycache__/`, `.env`, y archivos `hero_*.html` generados.
 
