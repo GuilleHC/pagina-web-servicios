@@ -2,40 +2,49 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## Running the Script
+## Correr la app web
 
-**1. Configura la API key** (requiere créditos en console.anthropic.com):
+**1. Configura la API key** (solo la primera vez — guardarla permanentemente):
 
-Windows PowerShell:
 ```powershell
-$env:ANTHROPIC_API_KEY="sk-ant-..."
+[System.Environment]::SetEnvironmentVariable("ANTHROPIC_API_KEY", "sk-ant-...", "User")
 ```
 
-Bash:
-```bash
-export ANTHROPIC_API_KEY="sk-ant-..."
+> La key debe empezar con `sk-ant-`, sin `#` ni comillas extra. Después de guardarla, cerrar y volver a abrir PowerShell.
+
+**2. Inicia el servidor Flask:**
+
+```powershell
+cd "C:\Users\guill\OneDrive\Documents\Proyectos Python\Pagina Web Servicios"
+python app.py
 ```
 
-**2. Corre el script** desde la carpeta del proyecto:
-
-```bash
-cd "C:/Users/guill/OneDrive/Documents/Proyectos Python/Pagina Web Servicios"
-python hero_generator.py
-```
-
-El script pedirá 5 datos interactivamente: nombre de marca, valor entregado, diferenciación, cliente ideal, y número de WhatsApp (con código de país, ej: `56912345678`).
+**3. Abre el navegador en:** `http://127.0.0.1:5000`
 
 ## Architecture
 
-Single-script tool (`hero_generator.py`) with three responsibilities:
+Aplicación web Flask (`app.py`) con dos rutas:
 
-1. **CLI input** (`preguntar`, `main`) — collects brand info interactively from the user.
-2. **AI generation** (`generar_hero`) — calls `claude-opus-4-5` via the Anthropic SDK to produce a JSON object with `slogan`, `subtitulo`, and `cta` fields.
-3. **HTML output** (`generar_html_hero`) — assembles a self-contained HTML file with inline CSS for a Hero section, including a WhatsApp CTA button.
+- `GET /` — Formulario con 5 preguntas del negocio + selector de 4 paletas de color
+- `POST /generar` — Llama a Claude API, genera el Hero y muestra la preview
 
-Output files are written to `/mnt/user-data/outputs/` as `hero_<brand_name>.html`.
+Archivos principales:
+- `app.py` — Servidor Flask, lógica de generación con Claude, construcción del HTML
+- `templates/index.html` — Formulario de entrada con selector visual de paletas
+- `templates/preview.html` — Vista previa full-screen del Hero + botón de descarga
+- `hero_generator.py` — Script CLI original (referencia, no se usa en la app web)
 
-> **Windows:** La ruta `/mnt/user-data/outputs/` no existe en Windows. Al ejecutar desde Claude Code o localmente, guardar directamente en la carpeta del proyecto (ej: `hero_terapia_con_pintura.html`).
+### Hero section — 4 elementos generados por Claude:
+1. **Etiqueta** — profesión/especialidad (ej: "Nutricionista Certificada")
+2. **Título** — frase principal impactante (máx. 10 palabras)
+3. **Subtítulo** — propuesta de valor (máx. 25 palabras)
+4. **CTA** — texto del botón WhatsApp (máx. 5 palabras)
+
+### Paletas de color disponibles:
+- `profesional` — Azul oscuro (coaches, consultores)
+- `salud` — Verde (nutricionistas, médicos)
+- `bienestar` — Morado (psicólogos, terapeutas)
+- `energia` — Naranja (profesores, entrenadores)
 
 ## Git & GitHub
 
@@ -57,15 +66,14 @@ git push
 **Reglas para mensajes de commit:**
 - Primera línea: `tipo: resumen en máximo 72 caracteres`
 - Tipos: `feat` (nueva función), `fix` (corrección), `docs` (documentación), `refactor`, `style`
-- Cuerpo opcional con bullets explicando el qué y el por qué del cambio
+- Cuerpo con bullets explicando el qué y el por qué del cambio
 - Siempre en español, claros y descriptivos para poder revertir cambios fácilmente
 
 **Seguridad:** Nunca incluir API keys en el código. Usar variables de entorno. El `.gitignore` excluye `__pycache__/`, `.env`, y archivos `hero_*.html` generados.
 
 ## Key Details
 
-- The prompt is Spanish-language and targets Latin American entrepreneurs.
-- The Claude API call expects a raw JSON response (no markdown fences); `json.loads` parses it directly.
-- WhatsApp link is built with `urllib.parse.quote` from the phone number the user provides (expects country code, e.g. `56912345678`).
-- **Windows encoding:** Al ejecutar desde Claude Code en Windows, agregar `sys.stdout.reconfigure(encoding='utf-8')` al inicio para evitar `UnicodeEncodeError` con emojis.
-- **API key:** Debe estar configurada como variable de entorno `ANTHROPIC_API_KEY` antes de ejecutar. No tiene valor por defecto en el código.
+- El prompt está en español y apunta a emprendedores/profesionales latinoamericanos.
+- La llamada a Claude espera JSON puro (sin backticks); `json.loads` lo parsea directo.
+- El link de WhatsApp se construye con `urllib.parse.quote` desde el número ingresado (requiere código de país, ej: `56912345678`).
+- **API key:** Debe estar en la variable de entorno `ANTHROPIC_API_KEY`. La key empieza con `sk-ant-`, sin `#` al inicio.
