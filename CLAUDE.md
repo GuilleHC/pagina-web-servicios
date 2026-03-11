@@ -37,6 +37,22 @@ Output files are written to `/mnt/user-data/outputs/` as `hero_<brand_name>.html
 
 > **Windows:** La ruta `/mnt/user-data/outputs/` no existe en Windows. Al ejecutar desde Claude Code o localmente, guardar directamente en la carpeta del proyecto (ej: `hero_terapia_con_pintura.html`).
 
+## Git & GitHub
+
+- **Repositorio:** https://github.com/GuilleHC/pagina-web-servicios
+- **Remote:** `origin` → `https://github.com/GuilleHC/pagina-web-servicios.git`
+- **Rama principal:** `master`
+- **gh CLI** instalado en `C:/Program Files/GitHub CLI`, autenticado como `GuilleHC`
+
+Flujo de trabajo:
+```bash
+git add <archivos>
+git commit -m "mensaje claro"
+git push
+```
+
+**Seguridad:** Nunca incluir API keys en el código. Usar variables de entorno. El `.gitignore` excluye `__pycache__/`, `.env`, y archivos `hero_*.html` generados.
+
 ## Key Details
 
 - The prompt is Spanish-language and targets Latin American entrepreneurs.
