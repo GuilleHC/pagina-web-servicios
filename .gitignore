@@ -1,0 +1,15 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.env
+
+# Outputs generados
+hero_*.html
+
+# VS Code
+.vscode/
+
+# Sistema
+.DS_Store
+Thumbs.db
