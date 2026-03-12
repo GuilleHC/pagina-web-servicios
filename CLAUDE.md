@@ -88,12 +88,24 @@ git push
 El output de la app es una **página web completa** (`index.html`) lista para subir a Hostinger u otro hosting estático. Se construye de forma incremental — por ahora solo tiene el Hero, y se van agregando secciones a medida que se desarrollan.
 
 **Secciones planificadas (en orden de implementación):**
-1. ✅ **Hero** — generado con Claude, 3 layouts disponibles
-2. ⬜ Sobre mí
-3. ⬜ Servicios
-4. ⬜ CTA final / Contacto
+1. ✅ **Hero** — 3 layouts, contenido generado por Claude
+2. ✅ **Propuesta de Valor** — etiqueta, título, subtítulo + cards con pilares del negocio
+3. ⬜ Sobre mí
+4. ⬜ Servicios
+5. ⬜ CTA final / Contacto
 
-Cada sección nueva se agrega como una función HTML independiente en `app.py` y se concatena al output final. El formulario se expande con nuevas preguntas según lo requiera cada sección.
+Cada sección nueva se agrega como una función `_html_seccion_X(contenido, p)` en `app.py` y se concatena en `generar_html_pagina()`. El formulario se expande con nuevas preguntas según lo requiera cada sección.
+
+### Arquitectura modular del HTML generado:
+- `_html_head()` — `<head>` con meta tags y fuentes
+- `_html_seccion_hero()` — despacha a `_hero_texto_izquierda / _hero_imagen_izquierda / _hero_central` según `tipo_hero`
+- `_html_seccion_propuesta_valor()` — grid de cards con pilares del negocio
+- `generar_html_pagina()` — ensambla todo en orden
+
+### Generación de contenido:
+- Una sola llamada a Claude (`generar_contenido()`) genera el JSON de todas las secciones
+- El prompt incluye todos los inputs del formulario y retorna `hero` + `propuesta_valor`
+- Al agregar una nueva sección, se extiende el JSON del prompt y se crea la función HTML correspondiente
 
 ## Key Details
 
