@@ -98,10 +98,16 @@ Cada sección nueva se agrega como una función `_html_seccion_X(contenido, p)` 
 
 ### Arquitectura modular del HTML generado:
 - `_html_head()` — `<head>` con meta tags, fuentes y `scroll-behavior: smooth`
-- `_html_navbar()` — navbar dentro del hero, links dinámicos según secciones activas, hamburger mobile
-- `_html_seccion_hero()` — despacha a `_hero_texto_izquierda / _hero_imagen_izquierda / _hero_central` según `tipo_hero`; cada layout recibe `navbar_html` y lo inyecta en el top de la sección con `id="inicio"`
+- `_html_navbar()` — **sección fija separada** (`position: fixed`, `background: #0d0d1a`, `border-bottom` con color acento de la paleta), links dinámicos según secciones activas, hamburger mobile
+- `_html_seccion_hero()` — despacha a `_hero_texto_izquierda / _hero_imagen_izquierda / _hero_central` según `tipo_hero`; el hero tiene `id="inicio"` y `padding-top: 68px` para compensar la navbar fija
 - `_html_seccion_propuesta_valor()` — grid de cards con `id="propuesta-valor"`
-- `generar_html_pagina()` — construye la lista `secciones` para el navbar, luego ensambla todo en orden
+- `generar_html_pagina()` — construye la lista `secciones` para el navbar, luego ensambla: head → navbar → hero → propuesta_valor → cierre
+
+### Navbar — reglas de diseño:
+- Es una sección **completamente separada** del hero, con su propio color oscuro fijo (`#0d0d1a`)
+- El diseño visual (border-bottom con color acento) sigue la paleta elegida, no el tipo de hero
+- Siempre tiene un CTA de WhatsApp a la derecha
+- Mobile: hamburger menu que despliega los links en columna
 
 ### Navbar — cómo agregar links al crecer la página:
 En `generar_html_pagina()`, la lista `secciones` controla los links:
