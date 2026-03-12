@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tu Hero — {{ marca }}</title>
+    <title>Tu página web — {{ marca }}</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -115,7 +115,7 @@
             Editar
         </a>
         <div class="topbar-title">{{ marca }}</div>
-        <span class="topbar-badge">Listo</span>
+        <span class="topbar-badge">Tu página web</span>
     </div>
 
     <div class="topbar-actions">
@@ -141,7 +141,7 @@
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = 'hero_{{ marca | lower | replace(" ", "_") }}.html';
+        a.download = 'index.html';
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);

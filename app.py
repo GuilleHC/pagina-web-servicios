@@ -142,6 +142,10 @@ def _html_split_texto_izquierda(marca, hero, wa_link, p):
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{marca}</title>
+    <meta name="description" content="{hero['subtitulo']}">
+    <meta property="og:title" content="{hero['titulo']}">
+    <meta property="og:description" content="{hero['subtitulo']}">
+    <meta property="og:type" content="website">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
         * {{ margin: 0; padding: 0; box-sizing: border-box; }}
@@ -234,6 +238,10 @@ def _html_split_imagen_izquierda(marca, hero, wa_link, p):
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{marca}</title>
+    <meta name="description" content="{hero['subtitulo']}">
+    <meta property="og:title" content="{hero['titulo']}">
+    <meta property="og:description" content="{hero['subtitulo']}">
+    <meta property="og:type" content="website">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
         * {{ margin: 0; padding: 0; box-sizing: border-box; }}
@@ -326,6 +334,10 @@ def _html_central(marca, hero, wa_link, p):
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{marca}</title>
+    <meta name="description" content="{hero['subtitulo']}">
+    <meta property="og:title" content="{hero['titulo']}">
+    <meta property="og:description" content="{hero['subtitulo']}">
+    <meta property="og:type" content="website">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
         * {{ margin: 0; padding: 0; box-sizing: border-box; }}

@@ -83,6 +83,18 @@ git push
 
 **Seguridad:** Nunca incluir API keys en el código. Usar variables de entorno. El `.gitignore` excluye `__pycache__/`, `.env`, y archivos `hero_*.html` generados.
 
+## Estrategia de desarrollo de la página web
+
+El output de la app es una **página web completa** (`index.html`) lista para subir a Hostinger u otro hosting estático. Se construye de forma incremental — por ahora solo tiene el Hero, y se van agregando secciones a medida que se desarrollan.
+
+**Secciones planificadas (en orden de implementación):**
+1. ✅ **Hero** — generado con Claude, 3 layouts disponibles
+2. ⬜ Sobre mí
+3. ⬜ Servicios
+4. ⬜ CTA final / Contacto
+
+Cada sección nueva se agrega como una función HTML independiente en `app.py` y se concatena al output final. El formulario se expande con nuevas preguntas según lo requiera cada sección.
+
 ## Key Details
 
 - El prompt está en español y apunta a emprendedores/profesionales latinoamericanos.
