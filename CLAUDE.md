@@ -2,6 +2,18 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Contexto del proyecto
+
+Aplicación web que genera páginas web profesionales para **emprendedores y profesionales de servicios latinoamericanos** (coaches, nutricionistas, psicólogos, entrenadores, consultores, etc.) que no tienen conocimientos técnicos.
+
+El usuario responde un formulario con información de su negocio, elige un estilo visual, y la app usa Claude AI para generar automáticamente una **página web completa y descargable** lista para subir a un hosting como Hostinger.
+
+### Filosofía de desarrollo
+- El proyecto crece **iterativamente**: se van agregando secciones a la página web de a una, validando el resultado antes de continuar
+- Cada nueva sección requiere: (1) nuevas preguntas en el formulario si aplica, (2) extensión del prompt a Claude, (3) función HTML nueva en `app.py`, (4) link en el navbar
+- Se prioriza **simplicidad y calidad visual** por sobre cantidad de opciones
+- El output final debe funcionar como sitio estático sin dependencias externas (sin frameworks, sin servidor)
+
 ## Correr la app web
 
 **1. Configura la API key** (solo la primera vez — guardarla permanentemente):
