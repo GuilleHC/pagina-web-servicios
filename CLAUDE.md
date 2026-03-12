@@ -33,7 +33,6 @@ Archivos principales:
 - `templates/index.html` — Formulario de entrada (3 secciones: info, tipo de Hero, paleta)
 - `templates/preview.html` — Vista previa full-screen del Hero + botón de descarga
 - `static/hero-tipos/` — Imágenes de referencia de los 3 layouts (`hero_1.jpg`, `hero_2.jpg`, `hero_3.jpg`)
-- `hero_generator.py` — Script CLI original (referencia, no se usa en la app web)
 
 ### Flujo del formulario (3 secciones):
 1. **Info del negocio** — profesión, marca, valor, diferenciación, cliente ideal, WhatsApp
