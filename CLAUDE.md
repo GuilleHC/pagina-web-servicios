@@ -4,12 +4,39 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Contexto del proyecto
 
-Aplicación web que genera páginas web profesionales para **emprendedores y profesionales de servicios latinoamericanos** (coaches, nutricionistas, psicólogos, entrenadores, consultores, etc.) que no tienen conocimientos técnicos.
+### Propósito
+Ayudar a emprendedores a crecer, siguiendo su propósito, creando valor a nuestra sociedad.
 
-El usuario responde un formulario con información de su negocio, elige un estilo visual, y la app usa Claude AI para generar automáticamente una **página web completa y descargable** lista para subir a un hosting como Hostinger.
+### Misión
+Que nuestros emprendedores tengan presencia en la web fácil, rápida y sin conocimientos de branding.
+
+### Visión
+El cliente entra a la app, sigue una serie de pasos, y en menos de 2 horas tiene una página web lista.
+
+### Segmento objetivo
+Prestadores de servicios latinoamericanos que:
+- Venden su tiempo y tienen un nicho (coaches, nutricionistas, psicólogos, entrenadores, consultores, especialistas)
+- No tienen dinero para pagar a un freelancer
+- No tienen conocimientos de branding, marketing ni de cómo hacer una página web
+- Están "atrapados en el día a día" y no saben cómo salir a venderse
+
+### Propuesta de valor
+- Presencia online para vender más y fortalecer el branding
+- Página simple con una presentación del negocio potente, lista para vender
+- **Diferenciación: simpleza, rapidez, pago único** vs la flexibilidad (y curva de aprendizaje alta) de Wix, Lovable, Hostinger
+
+### Modelo de ingreso
+- Precio económico vs mercado (página web en el mercado sobre $200.000 CLP; Lovable ~$30 USD/mes)
+- **Pago único** — el cliente paga una vez y se lleva su página web
+- Actualizaciones: por definir
+
+### Pilares de diferenciación del producto
+1. **Sin conocimiento previo** — simple y rápido, sin curva de aprendizaje técnica
+2. **Te ayudamos a venderte** — la IA genera el pitch comercial y la diferenciación
+3. **Económico y pago único** — hosting y dominio anual incluido (por definir)
 
 ### Filosofía de desarrollo
-- El proyecto crece **iterativamente**: se van agregando secciones a la página web de a una, validando el resultado antes de continuar
+- El proyecto crece **iterativamente**: se agregan secciones de a una, validando el resultado antes de continuar
 - Cada nueva sección requiere: (1) nuevas preguntas en el formulario si aplica, (2) extensión del prompt a Claude, (3) función HTML nueva en `app.py`, (4) link en el navbar
 - Se prioriza **simplicidad y calidad visual** por sobre cantidad de opciones
 - El output final debe funcionar como sitio estático sin dependencias externas (sin frameworks, sin servidor)
