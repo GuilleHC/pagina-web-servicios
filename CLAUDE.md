@@ -35,14 +35,14 @@ Archivos principales:
 - `static/hero-tipos/` — Imágenes de referencia de los 3 layouts (`hero_1.jpg`, `hero_2.jpg`, `hero_3.jpg`)
 
 ### Flujo del formulario (3 secciones):
-1. **Info del negocio** — profesión, marca, valor, diferenciación, cliente ideal, WhatsApp
+1. **Info del negocio** — profesión, marca, valor, diferenciación, cliente ideal, pilares (razones para elegirte), WhatsApp
 2. **Tipo de Hero** — el usuario elige uno de 3 layouts clicando en una imagen de referencia
 3. **Paleta de color** — 4 opciones visuales
 
 ### Tipos de Hero disponibles (`TIPOS_HERO` en app.py):
-- `tipo_1` — Texto izquierda, Imagen derecha → `_html_split_texto_izquierda()`
-- `tipo_2` — Imagen izquierda, Texto derecha → `_html_split_imagen_izquierda()`
-- `tipo_3` — Texto e Imagen Central → `_html_central()`
+- `tipo_1` — Texto izquierda, Imagen derecha → `_hero_texto_izquierda()`
+- `tipo_2` — Imagen izquierda, Texto derecha → `_hero_imagen_izquierda()`
+- `tipo_3` — Texto e Imagen Central → `_hero_central()`
 
 Cada función genera HTML independiente con el layout correspondiente. Los layouts con foto incluyen un placeholder `"📷 Tu foto aquí"`.
 
