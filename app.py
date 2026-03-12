@@ -133,7 +133,8 @@ def generar_html_pagina(marca, contenido, whatsapp, paleta_key, tipo_hero="tipo_
 
     return (
         _html_head(marca, hero) +
-        _html_seccion_hero(hero, wa_link, p, tipo_hero, navbar_html) +
+        navbar_html +
+        _html_seccion_hero(hero, wa_link, p, tipo_hero) +
         _html_seccion_propuesta_valor(pv, p) +
         "\n</body>\n</html>"
     )
@@ -172,19 +173,24 @@ def _html_navbar(marca, wa_link, cta_text, p, secciones):
     )
     return f"""    <style>
         .navbar {{
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            height: 68px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             padding: 0 6%;
-            height: 70px;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            position: relative;
-            z-index: 10;
+            background: #0d0d1a;
+            border-bottom: 2px solid {p['acento']};
+            box-shadow: 0 2px 20px rgba(0,0,0,0.3);
         }}
         .nav-brand {{
             font-size: 1rem;
             font-weight: 800;
-            color: {p['texto']};
+            color: #ffffff;
             text-decoration: none;
             letter-spacing: 0.5px;
             flex-shrink: 0;
@@ -197,7 +203,7 @@ def _html_navbar(marca, wa_link, cta_text, p, secciones):
         .nav-link {{
             font-size: 0.88rem;
             font-weight: 600;
-            color: rgba(255,255,255,0.7);
+            color: rgba(255,255,255,0.65);
             text-decoration: none;
             transition: color 0.2s;
             white-space: nowrap;
@@ -234,19 +240,18 @@ def _html_navbar(marca, wa_link, cta_text, p, secciones):
             height: 2px;
             background: white;
             border-radius: 2px;
-            transition: all 0.3s;
         }}
         @media (max-width: 768px) {{
             .nav-links {{
                 display: none;
-                position: absolute;
-                top: 70px;
+                position: fixed;
+                top: 68px;
                 left: 0;
                 right: 0;
                 flex-direction: column;
                 gap: 0;
-                background: rgba(0,0,0,0.92);
-                backdrop-filter: blur(10px);
+                background: #0d0d1a;
+                border-bottom: 2px solid {p['acento']};
                 padding: 8px 0;
             }}
             .nav-links.open {{ display: flex; }}
@@ -282,13 +287,13 @@ def _html_navbar(marca, wa_link, cta_text, p, secciones):
 
 # ── Sección Hero ──────────────────────────────────────────────────────────────
 
-def _html_seccion_hero(hero, wa_link, p, tipo_hero, navbar_html=""):
+def _html_seccion_hero(hero, wa_link, p, tipo_hero):
     if tipo_hero == "tipo_2":
-        return _hero_imagen_izquierda(hero, wa_link, p, navbar_html)
+        return _hero_imagen_izquierda(hero, wa_link, p)
     elif tipo_hero == "tipo_3":
-        return _hero_central(hero, wa_link, p, navbar_html)
+        return _hero_central(hero, wa_link, p)
     else:
-        return _hero_texto_izquierda(hero, wa_link, p, navbar_html)
+        return _hero_texto_izquierda(hero, wa_link, p)
 
 
 def _cta_btn(wa_link, cta_text):
@@ -298,17 +303,17 @@ def _cta_btn(wa_link, cta_text):
                 </a>"""
 
 
-def _hero_texto_izquierda(hero, wa_link, p, navbar_html=""):
+def _hero_texto_izquierda(hero, wa_link, p):
     return f"""
     <style>
         .hero {{
             min-height: 100vh;
             background: {p['bg_gradient']};
             display: flex;
-            flex-direction: column;
+            align-items: center;
+            padding-top: 68px;
         }}
         .hero-inner {{
-            flex: 1;
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 60px;
@@ -378,7 +383,6 @@ def _hero_texto_izquierda(hero, wa_link, p, navbar_html=""):
         }}
     </style>
     <section class="hero" id="inicio">
-        {navbar_html}
         <div class="hero-inner">
             <div class="hero-content">
                 <span class="hero-etiqueta">{hero['etiqueta']}</span>
@@ -391,17 +395,17 @@ def _hero_texto_izquierda(hero, wa_link, p, navbar_html=""):
     </section>"""
 
 
-def _hero_imagen_izquierda(hero, wa_link, p, navbar_html=""):
+def _hero_imagen_izquierda(hero, wa_link, p):
     return f"""
     <style>
         .hero {{
             min-height: 100vh;
             background: {p['bg_gradient']};
             display: flex;
-            flex-direction: column;
+            align-items: center;
+            padding-top: 68px;
         }}
         .hero-inner {{
-            flex: 1;
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 60px;
@@ -471,7 +475,6 @@ def _hero_imagen_izquierda(hero, wa_link, p, navbar_html=""):
         }}
     </style>
     <section class="hero" id="inicio">
-        {navbar_html}
         <div class="hero-inner">
             <div class="foto-placeholder"><span>📷 Tu foto aquí</span></div>
             <div class="hero-content">
@@ -484,22 +487,23 @@ def _hero_imagen_izquierda(hero, wa_link, p, navbar_html=""):
     </section>"""
 
 
-def _hero_central(hero, wa_link, p, navbar_html=""):
+def _hero_central(hero, wa_link, p):
     return f"""
     <style>
         .hero {{
             min-height: 100vh;
             background: {p['bg_gradient']};
             display: flex;
-            flex-direction: column;
+            align-items: center;
+            padding-top: 68px;
         }}
         .hero-inner {{
-            flex: 1;
             display: flex;
             align-items: center;
             justify-content: center;
             text-align: center;
             padding: 60px 20px;
+            width: 100%;
         }}
         .hero-content {{ max-width: 720px; width: 100%; }}
         .hero-etiqueta {{
@@ -565,7 +569,6 @@ def _hero_central(hero, wa_link, p, navbar_html=""):
         }}
     </style>
     <section class="hero" id="inicio">
-        {navbar_html}
         <div class="hero-inner">
             <div class="hero-content">
                 <span class="hero-etiqueta">{hero['etiqueta']}</span>
