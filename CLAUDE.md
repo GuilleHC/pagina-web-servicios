@@ -25,14 +25,27 @@ python app.py
 
 Aplicación web Flask (`app.py`) con dos rutas:
 
-- `GET /` — Formulario con 5 preguntas del negocio + selector de 4 paletas de color
+- `GET /` — Formulario con 5 preguntas del negocio + selector de tipo de Hero + selector de paleta de color
 - `POST /generar` — Llama a Claude API, genera el Hero y muestra la preview
 
 Archivos principales:
 - `app.py` — Servidor Flask, lógica de generación con Claude, construcción del HTML
-- `templates/index.html` — Formulario de entrada con selector visual de paletas
+- `templates/index.html` — Formulario de entrada (3 secciones: info, tipo de Hero, paleta)
 - `templates/preview.html` — Vista previa full-screen del Hero + botón de descarga
+- `static/hero-tipos/` — Imágenes de referencia de los 3 layouts (`hero_1.jpg`, `hero_2.jpg`, `hero_3.jpg`)
 - `hero_generator.py` — Script CLI original (referencia, no se usa en la app web)
+
+### Flujo del formulario (3 secciones):
+1. **Info del negocio** — profesión, marca, valor, diferenciación, cliente ideal, WhatsApp
+2. **Tipo de Hero** — el usuario elige uno de 3 layouts clicando en una imagen de referencia
+3. **Paleta de color** — 4 opciones visuales
+
+### Tipos de Hero disponibles (`TIPOS_HERO` en app.py):
+- `tipo_1` — Texto izquierda, Imagen derecha → `_html_split_texto_izquierda()`
+- `tipo_2` — Imagen izquierda, Texto derecha → `_html_split_imagen_izquierda()`
+- `tipo_3` — Texto e Imagen Central → `_html_central()`
+
+Cada función genera HTML independiente con el layout correspondiente. Los layouts con foto incluyen un placeholder `"📷 Tu foto aquí"`.
 
 ### Hero section — 4 elementos generados por Claude:
 1. **Etiqueta** — profesión/especialidad (ej: "Nutricionista Certificada")
