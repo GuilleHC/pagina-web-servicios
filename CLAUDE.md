@@ -97,10 +97,22 @@ El output de la app es una **página web completa** (`index.html`) lista para su
 Cada sección nueva se agrega como una función `_html_seccion_X(contenido, p)` en `app.py` y se concatena en `generar_html_pagina()`. El formulario se expande con nuevas preguntas según lo requiera cada sección.
 
 ### Arquitectura modular del HTML generado:
-- `_html_head()` — `<head>` con meta tags y fuentes
-- `_html_seccion_hero()` — despacha a `_hero_texto_izquierda / _hero_imagen_izquierda / _hero_central` según `tipo_hero`
-- `_html_seccion_propuesta_valor()` — grid de cards con pilares del negocio
-- `generar_html_pagina()` — ensambla todo en orden
+- `_html_head()` — `<head>` con meta tags, fuentes y `scroll-behavior: smooth`
+- `_html_navbar()` — navbar dentro del hero, links dinámicos según secciones activas, hamburger mobile
+- `_html_seccion_hero()` — despacha a `_hero_texto_izquierda / _hero_imagen_izquierda / _hero_central` según `tipo_hero`; cada layout recibe `navbar_html` y lo inyecta en el top de la sección con `id="inicio"`
+- `_html_seccion_propuesta_valor()` — grid de cards con `id="propuesta-valor"`
+- `generar_html_pagina()` — construye la lista `secciones` para el navbar, luego ensambla todo en orden
+
+### Navbar — cómo agregar links al crecer la página:
+En `generar_html_pagina()`, la lista `secciones` controla los links:
+```python
+secciones = [
+    {"id": "inicio",          "label": "Inicio"},
+    {"id": "propuesta-valor", "label": pv["etiqueta"]},
+    # Agregar aquí cada sección nueva con su id y etiqueta
+]
+```
+Cada sección nueva debe tener `id="su-id"` en su tag `<section>`.
 
 ### Generación de contenido:
 - Una sola llamada a Claude (`generar_contenido()`) genera el JSON de todas las secciones
