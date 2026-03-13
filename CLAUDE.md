@@ -164,6 +164,19 @@ Cada sección nueva debe tener `id="su-id"` en su tag `<section>`.
 - El prompt incluye todos los inputs del formulario y retorna `hero` + `propuesta_valor`
 - Al agregar una nueva sección, se extiende el JSON del prompt y se crea la función HTML correspondiente
 
+## Mejoras UX/UI del formulario
+
+Relevadas el 2026-03-13 con Playwright. Todas implementadas el 2026-03-13.
+
+1. ✅ **Reemplazar "Hero" por "portada"** — `templates/index.html`, labels y textos de ayuda
+2. ✅ **Labels amigables en layouts** — "Clásico", "Moderno", "Centrado" (en `TIPOS_HERO`, `app.py`)
+3. ✅ **Mobile: selector de layouts en columna** — media query en `index.html`
+4. ✅ **Indicador de progreso** — 3 pasos con IntersectionObserver en `index.html`
+5. ✅ **Texto de expectativa antes del CTA** — *"En ~15 segundos tendrás tu portada lista para ver"*
+6. ✅ **Ejemplo inline en campo "pilares"** — hint con ejemplo concreto
+
+---
+
 ## Key Details
 
 - El prompt está en español y apunta a emprendedores/profesionales latinoamericanos.

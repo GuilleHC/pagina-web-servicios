@@ -7,15 +7,15 @@ app = Flask(__name__)
 
 TIPOS_HERO = {
     "tipo_1": {
-        "nombre": "Texto izquierda, Imagen derecha",
+        "nombre": "Clásico",
         "imagen": "hero_1.jpg",
     },
     "tipo_2": {
-        "nombre": "Imagen izquierda, Texto derecha",
+        "nombre": "Moderno",
         "imagen": "hero_2.jpg",
     },
     "tipo_3": {
-        "nombre": "Texto e Imagen Central",
+        "nombre": "Centrado",
         "imagen": "hero_3.jpg",
     },
 }

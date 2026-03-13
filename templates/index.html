@@ -200,6 +200,76 @@
             .hero-tipos-grid { grid-template-columns: 1fr; }
         }
 
+        /* Progress indicator */
+        .progress-bar {
+            max-width: 680px;
+            margin: 28px auto 0;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            gap: 0;
+        }
+        .progress-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            flex: 1;
+            position: relative;
+        }
+        .progress-step:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            top: 14px;
+            left: 50%;
+            width: 100%;
+            height: 2px;
+            background: #d1d5db;
+            transition: background 0.3s;
+            z-index: 0;
+        }
+        .progress-step.done:not(:last-child)::after {
+            background: #0f3460;
+        }
+        .step-circle {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            border: 2px solid #d1d5db;
+            background: white;
+            color: #9ca3af;
+            font-size: 0.78rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            position: relative;
+            z-index: 1;
+        }
+        .progress-step.active .step-circle {
+            border-color: #0f3460;
+            background: #0f3460;
+            color: white;
+        }
+        .progress-step.done .step-circle {
+            border-color: #0f3460;
+            background: #0f3460;
+            color: white;
+        }
+        .step-label {
+            font-size: 0.7rem;
+            color: #9ca3af;
+            font-weight: 500;
+            white-space: nowrap;
+            transition: color 0.3s;
+        }
+        .progress-step.active .step-label,
+        .progress-step.done .step-label {
+            color: #0f3460;
+            font-weight: 600;
+        }
+
         /* Submit */
         .submit-btn {
             width: 100%;
@@ -231,8 +301,23 @@
 
 <header class="header">
     <h1>Crea tu página web</h1>
-    <p>Responde estas preguntas y generamos tu Hero en segundos</p>
+    <p>Responde estas preguntas y generamos tu portada en segundos</p>
 </header>
+
+<div class="progress-bar" id="progress-bar">
+    <div class="progress-step active" id="step-1">
+        <div class="step-circle">1</div>
+        <span class="step-label">Tu negocio</span>
+    </div>
+    <div class="progress-step" id="step-2">
+        <div class="step-circle">2</div>
+        <span class="step-label">Tu portada</span>
+    </div>
+    <div class="progress-step" id="step-3">
+        <div class="step-circle">3</div>
+        <span class="step-label">Tu estilo</span>
+    </div>
+</div>
 
 <div class="container">
     <form action="/generar" method="POST" id="form">
@@ -270,7 +355,7 @@
             </div>
 
             <div class="field">
-                <label>¿Por qué tus clientes te preferirían por sobre otros? <span class="hint">menciona a lo menos 3 razones que te diferencian y por las que estás seguro que les entregarás valor</span></label>
+                <label>¿Por qué tus clientes te preferirían por sobre otros? <span class="hint">ej: "Resultados en 30 días, método probado, acompañamiento 24/7"</span></label>
                 <textarea name="pilares" placeholder="1. Mi método es 100% personalizado según cada caso&#10;2. Tengo 10 años de experiencia y más de 200 clientes&#10;3. Garantizo resultados en 90 días o devuelvo el dinero" required></textarea>
             </div>
 
@@ -284,7 +369,7 @@
         <div class="form-section">
             <div class="section-title">
                 <span class="section-number">2</span>
-                ¿Cómo quieres que se vea tu Hero?
+                ¿Cómo quieres que se vea tu portada?
             </div>
 
             <div class="hero-tipos-grid">
@@ -329,8 +414,11 @@
             </div>
         </div>
 
+        <p style="text-align:center; font-size:0.85rem; color:#6b7280; margin-bottom:12px;">
+            En ~15 segundos tendrás tu portada lista para ver
+        </p>
         <button type="submit" class="submit-btn" id="submit-btn">
-            Generar mi Hero con IA
+            Generar mi portada con IA
         </button>
 
     </form>
@@ -353,10 +441,37 @@
         });
     });
 
+    // Progress indicator
+    const sections = document.querySelectorAll('.form-section');
+    const steps = [
+        document.getElementById('step-1'),
+        document.getElementById('step-2'),
+        document.getElementById('step-3'),
+    ];
+
+    function setStep(activeIndex) {
+        steps.forEach((step, i) => {
+            step.classList.remove('active', 'done');
+            if (i < activeIndex) step.classList.add('done');
+            else if (i === activeIndex) step.classList.add('active');
+        });
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const idx = Array.from(sections).indexOf(entry.target);
+                if (idx !== -1) setStep(idx);
+            }
+        });
+    }, { threshold: 0.3 });
+
+    sections.forEach(s => observer.observe(s));
+
     // Loading state on submit
     document.getElementById('form').addEventListener('submit', function () {
         const btn = document.getElementById('submit-btn');
-        btn.textContent = 'Generando con IA...';
+        btn.textContent = 'Generando tu portada...';
         btn.classList.add('loading');
         btn.disabled = true;
     });
