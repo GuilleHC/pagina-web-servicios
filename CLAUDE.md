@@ -89,15 +89,20 @@ await browser.close();
 
 ## Architecture
 
-Aplicación web Flask (`app.py`) con dos rutas:
+Aplicación web Flask (`app.py`) con el siguiente flujo de rutas:
 
-- `GET /` — Formulario con 5 preguntas del negocio + selector de tipo de Hero + selector de paleta de color
-- `POST /generar` — Llama a Claude API, genera el Hero y muestra la preview
+```
+GET /          →  Formulario inicial
+POST /generar  →  Claude genera JSON → renderiza editar.html
+POST /actualizar-preview  →  Fetch JS desde editar.html → devuelve HTML plano (refresca iframe)
+POST /preview  →  Submit final desde editar.html → renderiza preview.html
+```
 
 Archivos principales:
 - `app.py` — Servidor Flask, lógica de generación con Claude, construcción del HTML
 - `templates/index.html` — Formulario de entrada (3 secciones: info, tipo de Hero, paleta)
-- `templates/preview.html` — Vista previa full-screen del Hero + botón de descarga
+- `templates/editar.html` — Pantalla dividida: formulario editable izquierda / iframe preview derecha
+- `templates/preview.html` — Vista previa full-screen + botón de descarga (Paso 3 de 3)
 - `static/hero-tipos/` — Imágenes de referencia de los 3 layouts (`hero_1.jpg`, `hero_2.jpg`, `hero_3.jpg`)
 
 ### Flujo del formulario (3 secciones):
@@ -190,6 +195,29 @@ Cada sección nueva debe tener `id="su-id"` en su tag `<section>`.
 - Una sola llamada a Claude (`generar_contenido()`) genera el JSON de todas las secciones
 - El prompt incluye todos los inputs del formulario y retorna `hero` + `propuesta_valor`
 - Al agregar una nueva sección, se extiende el JSON del prompt y se crea la función HTML correspondiente
+
+### Paso de edición (`templates/editar.html`):
+- Layout desktop: columna izquierda (~400px, scrollable) + columna derecha (iframe sticky)
+- El `<form>` necesita `display:flex; flex-direction:column; flex:1; overflow:hidden; min-height:0` para que `.panel-scroll` pueda hacer scroll dentro del flex container
+- Secciones del formulario de edición (en orden):
+  1. **Barra de navegación** — `marca` (nombre visible en navbar), `whatsapp` (número con código de país)
+  2. **Portada** — `hero_etiqueta`, `hero_titulo`, `hero_subtitulo`, `hero_cta`
+  3. **Propuesta de valor** — `pv_etiqueta`, `pv_titulo`, `pv_subtitulo`, cards dinámicas (`card_N_titulo`, `card_N_descripcion`), campo oculto `card_count`
+- Campos siempre ocultos (no editables en esta pantalla): `paleta`, `tipo_hero`
+- "Actualizar vista": fetch POST a `/actualizar-preview` → actualiza `iframe.srcdoc` sin recargar
+- "Confirmar y ver mi página →": submit normal a `POST /preview`
+- Mobile (≤900px): columna única, iframe oculto
+
+### Función `_contenido_desde_form(form)`:
+Reconstruye el dict `contenido` a partir del form de edición. Usada por `/actualizar-preview` y `/preview`.
+Al agregar una nueva sección editable, extender esta función con sus campos correspondientes.
+
+### Cómo agregar una nueva sección al panel de edición:
+1. Agregar campos al JSON del prompt de Claude y a `generar_contenido()`
+2. Crear `_html_seccion_X(contenido, p)` en `app.py` y concatenarla en `generar_html_pagina()`
+3. Agregar la sección al dict `secciones` en `generar_html_pagina()` (para el navbar)
+4. Extender `_contenido_desde_form()` con los nuevos campos
+5. Agregar la sección editable en `templates/editar.html` con los inputs correspondientes
 
 ## Mejoras UX/UI del formulario
 

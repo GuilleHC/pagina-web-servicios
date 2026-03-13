@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ajusta tu página — {{ marca }}</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f8f9fa;
+            color: #1a1a2e;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* ── Topbar ── */
+        .topbar {
+            background: white;
+            border-bottom: 1px solid #e5e7eb;
+            padding: 14px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 100;
+            gap: 12px;
+            flex-shrink: 0;
+        }
+        .topbar-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            min-width: 0;
+        }
+        .back-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #6b7280;
+            text-decoration: none;
+            font-size: 0.88rem;
+            font-weight: 500;
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 1.5px solid #e5e7eb;
+            white-space: nowrap;
+            transition: background 0.2s;
+            flex-shrink: 0;
+        }
+        .back-btn:hover { background: #f3f4f6; }
+        .topbar-title {
+            font-size: 0.95rem;
+            font-weight: 700;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .topbar-badge {
+            font-size: 0.75rem;
+            color: #6b7280;
+            background: #f3f4f6;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        /* ── Split layout ── */
+        .split {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        /* ── Left panel ── */
+        .panel-left {
+            width: 400px;
+            min-width: 340px;
+            flex-shrink: 0;
+            background: white;
+            border-right: 1px solid #e5e7eb;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        /* El form es un elemento intermedio — necesita heredar el layout flex */
+        #edit-form {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            min-height: 0;
+        }
+        .panel-scroll {
+            flex: 1;
+            overflow-y: auto;
+            min-height: 0;
+            padding: 24px 24px 32px;
+        }
+
+        /* ── Form sections ── */
+        .form-section {
+            margin-bottom: 32px;
+        }
+        .form-section:last-of-type {
+            margin-bottom: 0;
+        }
+        .section-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: #9ca3af;
+            margin-bottom: 16px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #f3f4f6;
+        }
+        .field {
+            margin-bottom: 16px;
+        }
+        .field label {
+            display: block;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 6px;
+        }
+        .field input,
+        .field textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1.5px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-family: inherit;
+            color: #1a1a2e;
+            background: #fafafa;
+            transition: border-color 0.2s, background 0.2s;
+            resize: vertical;
+        }
+        .field input:focus,
+        .field textarea:focus {
+            outline: none;
+            border-color: #6366f1;
+            background: white;
+        }
+        .field textarea { min-height: 72px; }
+        .field-hint {
+            font-size: 0.78rem;
+            color: #9ca3af;
+            margin-top: 5px;
+            line-height: 1.4;
+        }
+
+        /* ── Card subgroup ── */
+        .card-group {
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            padding: 14px 16px;
+            margin-bottom: 12px;
+        }
+        .card-group-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #9ca3af;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+        .card-group .field { margin-bottom: 10px; }
+        .card-group .field:last-child { margin-bottom: 0; }
+
+        /* ── Panel footer (buttons) ── */
+        .panel-footer {
+            padding: 16px 24px;
+            border-top: 1px solid #e5e7eb;
+            background: white;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .btn-refresh {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: #f3f4f6;
+            color: #374151;
+            border: 1.5px solid #e5e7eb;
+            padding: 11px 18px;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s, border-color 0.2s;
+            font-family: inherit;
+        }
+        .btn-refresh:hover { background: #e5e7eb; border-color: #d1d5db; }
+        .btn-refresh:disabled { opacity: 0.6; cursor: not-allowed; }
+        .btn-confirm {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: #1a1a2e;
+            color: white;
+            border: none;
+            padding: 13px 18px;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: opacity 0.2s;
+            font-family: inherit;
+        }
+        .btn-confirm:hover { opacity: 0.85; }
+
+        /* ── Right panel (iframe) ── */
+        .panel-right {
+            flex: 1;
+            overflow: hidden;
+            position: relative;
+        }
+        .preview-frame {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* ── Loading overlay ── */
+        .loading-overlay {
+            display: none;
+            position: absolute;
+            inset: 0;
+            background: rgba(248, 249, 250, 0.85);
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #6b7280;
+            gap: 10px;
+            z-index: 10;
+        }
+        .loading-overlay.visible { display: flex; }
+        .spinner {
+            width: 18px;
+            height: 18px;
+            border: 2px solid #d1d5db;
+            border-top-color: #6366f1;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* ── Mobile ── */
+        @media (max-width: 900px) {
+            body { overflow: auto; }
+            .split { flex-direction: column; overflow: visible; }
+            .panel-left {
+                width: 100%;
+                min-width: 0;
+                border-right: none;
+                border-bottom: 1px solid #e5e7eb;
+                overflow: visible;
+            }
+            #edit-form { overflow: visible; }
+            .panel-scroll { overflow: visible; min-height: unset; }
+            .panel-right { display: none; }
+            .topbar-badge { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="topbar">
+    <div class="topbar-left">
+        <a href="/" class="back-btn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M19 12H5M5 12l7 7M5 12l7-7"/>
+            </svg>
+            Volver
+        </a>
+        <div class="topbar-title">Ajusta el texto de tu página</div>
+        <span class="topbar-badge">Paso 2 de 3</span>
+    </div>
+</div>
+
+<div class="split">
+    <!-- ── Left: editable form ── -->
+    <div class="panel-left">
+        <form id="edit-form" method="POST" action="/preview">
+            <!-- Hidden fields (no editables) -->
+            <input type="hidden" name="paleta"    value="{{ paleta }}">
+            <input type="hidden" name="tipo_hero" value="{{ tipo_hero }}">
+            <input type="hidden" name="card_count" value="{{ contenido.propuesta_valor.cards | length }}">
+
+            <div class="panel-scroll">
+
+                <!-- SECCIÓN: Navbar -->
+                <div class="form-section">
+                    <div class="section-label">Barra de navegación</div>
+
+                    <div class="field">
+                        <label for="marca">Nombre de la marca</label>
+                        <input type="text" id="marca" name="marca" value="{{ marca }}">
+                        <p class="field-hint">Aparece como logo de texto en el navbar y como título de la pestaña del navegador.</p>
+                    </div>
+                    <div class="field">
+                        <label for="whatsapp">Número de WhatsApp</label>
+                        <input type="text" id="whatsapp" name="whatsapp" value="{{ whatsapp }}">
+                        <p class="field-hint">Con código de país, sin espacios (ej: 56912345678). Todos los botones de la página enlazan a este número.</p>
+                    </div>
+                    <div class="field">
+                        <label>Texto del botón WhatsApp</label>
+                        <p class="field-hint">Se edita en la sección Portada → "Botón WhatsApp".</p>
+                    </div>
+                </div>
+
+                <!-- SECCIÓN: Portada -->
+                <div class="form-section">
+                    <div class="section-label">Portada</div>
+
+                    <div class="field">
+                        <label for="hero_etiqueta">Etiqueta</label>
+                        <input type="text" id="hero_etiqueta" name="hero_etiqueta"
+                               value="{{ contenido.hero.etiqueta }}">
+                        <p class="field-hint">Tu profesión o especialidad. Aparece sobre el título principal.</p>
+                    </div>
+                    <div class="field">
+                        <label for="hero_titulo">Título principal</label>
+                        <input type="text" id="hero_titulo" name="hero_titulo"
+                               value="{{ contenido.hero.titulo }}">
+                        <p class="field-hint">La frase más impactante de tu página. Máx. 10 palabras.</p>
+                    </div>
+                    <div class="field">
+                        <label for="hero_subtitulo">Subtítulo</label>
+                        <textarea id="hero_subtitulo" name="hero_subtitulo">{{ contenido.hero.subtitulo }}</textarea>
+                        <p class="field-hint">Tu propuesta de valor en 1-2 oraciones. Máx. 25 palabras.</p>
+                    </div>
+                    <div class="field">
+                        <label for="hero_cta">Botón WhatsApp</label>
+                        <input type="text" id="hero_cta" name="hero_cta"
+                               value="{{ contenido.hero.cta }}">
+                        <p class="field-hint">Texto del botón de contacto. También aparece en el navbar. Máx. 5 palabras.</p>
+                    </div>
+                </div>
+
+                <!-- SECCIÓN: Propuesta de valor -->
+                <div class="form-section">
+                    <div class="section-label">Propuesta de valor</div>
+
+                    <div class="field">
+                        <label for="pv_etiqueta">Etiqueta</label>
+                        <input type="text" id="pv_etiqueta" name="pv_etiqueta"
+                               value="{{ contenido.propuesta_valor.etiqueta }}">
+                        <p class="field-hint">Título del link en el navbar que lleva a esta sección.</p>
+                    </div>
+                    <div class="field">
+                        <label for="pv_titulo">Título</label>
+                        <input type="text" id="pv_titulo" name="pv_titulo"
+                               value="{{ contenido.propuesta_valor.titulo }}">
+                    </div>
+                    <div class="field">
+                        <label for="pv_subtitulo">Subtítulo</label>
+                        <textarea id="pv_subtitulo" name="pv_subtitulo">{{ contenido.propuesta_valor.subtitulo }}</textarea>
+                    </div>
+
+                    {% for card in contenido.propuesta_valor.cards %}
+                    <div class="card-group">
+                        <div class="card-group-label">Razón {{ loop.index }}</div>
+                        <div class="field">
+                            <label>Título</label>
+                            <input type="text" name="card_{{ loop.index0 }}_titulo"
+                                   value="{{ card.titulo }}">
+                        </div>
+                        <div class="field">
+                            <label>Descripción</label>
+                            <textarea name="card_{{ loop.index0 }}_descripcion">{{ card.descripcion }}</textarea>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+            </div><!-- /panel-scroll -->
+
+            <div class="panel-footer">
+                <button type="button" class="btn-refresh" id="btn-refresh" onclick="actualizarPreview()">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <path d="M23 4v6h-6M1 20v-6h6"/>
+                        <path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/>
+                    </svg>
+                    Actualizar vista
+                </button>
+                <button type="submit" class="btn-confirm">
+                    Confirmar y ver mi página
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <path d="M5 12h14M12 5l7 7-7 7"/>
+                    </svg>
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- ── Right: live preview ── -->
+    <div class="panel-right">
+        <div class="loading-overlay" id="loading-overlay">
+            <div class="spinner"></div>
+            Actualizando vista…
+        </div>
+        <iframe class="preview-frame" id="preview-frame"></iframe>
+    </div>
+</div>
+
+<script>
+    // Cargar preview inicial
+    const initialHtml = {{ html_output | tojson }};
+    document.getElementById('preview-frame').srcdoc = initialHtml;
+
+    async function actualizarPreview() {
+        const btn = document.getElementById('btn-refresh');
+        const overlay = document.getElementById('loading-overlay');
+        btn.disabled = true;
+        overlay.classList.add('visible');
+
+        try {
+            const formData = new FormData(document.getElementById('edit-form'));
+            const res = await fetch('/actualizar-preview', { method: 'POST', body: formData });
+            const html = await res.text();
+            document.getElementById('preview-frame').srcdoc = html;
+        } catch (e) {
+            alert('Error al actualizar la vista. Inténtalo de nuevo.');
+        } finally {
+            btn.disabled = false;
+            overlay.classList.remove('visible');
+        }
+    }
+</script>
+
+</body>
+</html>

@@ -699,26 +699,76 @@ def index():
     return render_template("index.html", paletas=PALETAS, tipos_hero=TIPOS_HERO)
 
 
+def _contenido_desde_form(form):
+    cards = []
+    card_count = int(form.get("card_count", 0))
+    for i in range(card_count):
+        cards.append({
+            "titulo":      form.get(f"card_{i}_titulo", ""),
+            "descripcion": form.get(f"card_{i}_descripcion", ""),
+        })
+    return {
+        "hero": {
+            "etiqueta":  form["hero_etiqueta"],
+            "titulo":    form["hero_titulo"],
+            "subtitulo": form["hero_subtitulo"],
+            "cta":       form["hero_cta"],
+        },
+        "propuesta_valor": {
+            "etiqueta":  form["pv_etiqueta"],
+            "titulo":    form["pv_titulo"],
+            "subtitulo": form["pv_subtitulo"],
+            "cards":     cards,
+        },
+    }
+
+
 @app.route("/generar", methods=["POST"])
 def generar():
-    profesion    = request.form["profesion"]
-    marca        = request.form["marca"]
-    valor        = request.form["valor"]
+    profesion      = request.form["profesion"]
+    marca          = request.form["marca"]
+    valor          = request.form["valor"]
     diferenciacion = request.form["diferenciacion"]
     cliente_ideal  = request.form["cliente_ideal"]
-    pilares      = request.form["pilares"]
-    whatsapp     = request.form["whatsapp"]
-    paleta_key   = request.form.get("paleta", "profesional")
-    tipo_hero    = request.form.get("tipo_hero", "tipo_1")
+    pilares        = request.form["pilares"]
+    whatsapp       = request.form["whatsapp"]
+    paleta_key     = request.form.get("paleta", "profesional")
+    tipo_hero      = request.form.get("tipo_hero", "tipo_1")
 
-    contenido    = generar_contenido(profesion, marca, valor, diferenciacion, cliente_ideal, pilares)
-    html_output  = generar_html_pagina(marca, contenido, whatsapp, paleta_key, tipo_hero)
+    contenido   = generar_contenido(profesion, marca, valor, diferenciacion, cliente_ideal, pilares)
+    html_output = generar_html_pagina(marca, contenido, whatsapp, paleta_key, tipo_hero)
 
     return render_template(
-        "preview.html",
+        "editar.html",
+        contenido=contenido,
         html_output=html_output,
         marca=marca,
+        whatsapp=whatsapp,
+        paleta=paleta_key,
+        tipo_hero=tipo_hero,
     )
+
+
+@app.route("/actualizar-preview", methods=["POST"])
+def actualizar_preview():
+    marca      = request.form["marca"]
+    whatsapp   = request.form["whatsapp"]
+    paleta_key = request.form["paleta"]
+    tipo_hero  = request.form["tipo_hero"]
+    contenido  = _contenido_desde_form(request.form)
+    html_output = generar_html_pagina(marca, contenido, whatsapp, paleta_key, tipo_hero)
+    return html_output, 200, {"Content-Type": "text/plain; charset=utf-8"}
+
+
+@app.route("/preview", methods=["POST"])
+def preview():
+    marca      = request.form["marca"]
+    whatsapp   = request.form["whatsapp"]
+    paleta_key = request.form["paleta"]
+    tipo_hero  = request.form["tipo_hero"]
+    contenido  = _contenido_desde_form(request.form)
+    html_output = generar_html_pagina(marca, contenido, whatsapp, paleta_key, tipo_hero)
+    return render_template("preview.html", html_output=html_output, marca=marca)
 
 
 if __name__ == "__main__":
