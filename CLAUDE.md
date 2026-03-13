@@ -60,6 +60,33 @@ python app.py
 
 **3. Abre el navegador en:** `http://127.0.0.1:5000`
 
+## Herramientas de desarrollo
+
+### Playwright (screenshots y verificación visual)
+Disponible vía Node.js (`npx`). Usar para capturar screenshots y verificar cambios visuales en desktop y mobile.
+
+```bash
+# Setup (solo la primera vez)
+mkdir -p /tmp/pw_test && cd /tmp/pw_test
+echo '{"name":"pw","type":"module"}' > package.json
+npm install playwright --save-quiet
+npx playwright install chromium
+```
+
+```js
+// Ejemplo de uso — guardar como /tmp/pw_test/capture.mjs y ejecutar con: node capture.mjs
+import { chromium } from 'playwright';
+const DEST = 'C:/Users/guill/OneDrive/Documents/Proyectos Python/Pagina Web Servicios';
+const browser = await chromium.launch();
+const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+await page.goto('http://127.0.0.1:5000');
+await page.waitForLoadState('networkidle');
+await page.screenshot({ path: `${DEST}/ss_desktop.png`, fullPage: true });
+await browser.close();
+```
+
+> El servidor Flask debe estar corriendo antes de capturar screenshots.
+
 ## Architecture
 
 Aplicación web Flask (`app.py`) con dos rutas:
